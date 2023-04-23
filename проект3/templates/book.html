@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% for book in books %}
+{% if book.id == id %}
+<h2 align="center">{{book.name}}</h2>
+<h3 align="center">{{book.author}}</h3>
+{% endif %}
+{% endfor %}
+{% if current_user.is_authenticated %}
+<div align="center">
+<a href="editbook/{{id}}" class="btn btn-secondary" >Edit book</a>
+</div>
+<br>
+{% endif %}
+{% for r in reviews %}
+{% if r.book == id %}
+{% if r.user == sid %}
+<div class="alert alert-success" role="alert">
+<h4>{{r.text}}</h4>
+</div>
+{% else %}
+<div class="alert alert-primary" role="alert">
+<h4>{{r.text}}</h4>
+</div>
+{% endif %}
+{% endif %}
+{% endfor %}
+
+{% if current_user.is_authenticated %}
+<form action="" method="post">
+    {{ form.hidden_tag() }}
+    {{ form.csrf_token }}
+    <p>
+        {{ form.text.label }}<br>
+        {{ form.text(class="form-control") }}<br>
+        {% for error in form.text.errors %}
+    <p class="alert alert-danger" role="alert">
+        {{ error }}
+    </p>
+    {% endfor %}
+    </p>
+    <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+    {{message}}
+</form>
+{% endif %}
+
+{% endblock %}
